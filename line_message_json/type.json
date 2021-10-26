@@ -1,0 +1,38 @@
+[
+{
+  "type": "template",
+  "altText": "this is a buttons template",
+  "template": {
+    "type": "buttons",
+    "thumbnailImageUrl": "https://imgcunhu.oss-cn-hangzhou.aliyuncs.com//upload/2021-06-29/538e80e5-7e3a-4207-bdf0-aa925ef93575.jpg",
+    "title": "選擇車型",
+    "text": " ",
+    "actions": [
+      {
+        "type": "postback",
+        "label": "轎車",
+        "text": "[轎車]",
+        "data": "[type]3"
+      },
+      {
+        "type": "postback",
+        "label": "掀背車",
+        "text": "[掀背車]",
+        "data": "[type]4"
+      },
+      {
+        "type": "postback",
+        "label": "旅行車",
+        "text": "[旅行車]",
+        "data": "[type]1"
+      },
+      {
+        "type": "postback",
+        "label": "SUV",
+        "text": "[SUV]",
+        "data": "[type]2"
+      }
+    ]
+  }
+}
+]

@@ -1,0 +1,70 @@
+{
+  "type": "template",
+  "altText": "this is a carousel template",
+  "template": {
+    "type": "carousel",
+    "imageSize": "cover",
+    "columns": [
+      {
+        "thumbnailImageUrl": "https://i.imgur.com/rZuTHd8.png",
+        "title": "標題",
+        "text": " 嗨嗨",
+        "actions": [
+          {
+            "type": "uri",
+            "label": "了解更多",
+            "uri": "https://i.imgur.com/rZuTHd8.png"
+          }
+        ]
+      },
+      {
+        "thumbnailImageUrl": "https://i.imgur.com/rZuTHd8.png",
+        "title": "標題",
+        "text": " 嗨嗨",
+        "actions": [
+          {
+            "type": "uri",
+            "label": "了解更多",
+            "uri": "https://i.imgur.com/rZuTHd8.png"
+          }
+        ]
+      },
+      {
+        "thumbnailImageUrl": "https://i.imgur.com/rZuTHd8.png",
+        "title": "標題",
+        "text": " 嗨嗨",
+        "actions": [
+          {
+            "type": "uri",
+            "label": "了解更多",
+            "uri": "https://i.imgur.com/rZuTHd8.png"
+          }
+        ]
+      },
+      {
+        "thumbnailImageUrl": "https://i.imgur.com/rZuTHd8.png",
+        "title": "標題",
+        "text": " 嗨嗨",
+        "actions": [
+          {
+            "type": "uri",
+            "label": "了解更多",
+            "uri": "https://i.imgur.com/rZuTHd8.png"
+          }
+        ]
+      },
+      {
+        "thumbnailImageUrl": "https://i.imgur.com/rZuTHd8.png",
+        "title": "點擊下方連結獲得更多車款",
+        "text": " ",
+        "actions": [
+          {
+            "type": "uri",
+            "label": "尋找更多",
+            "uri": "https://i.imgur.com/rZuTHd8.png"
+          }
+        ]
+      }
+    ]
+  }
+}

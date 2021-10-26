@@ -1,0 +1,45 @@
+[
+{
+  "type": "text",
+  "text": "嗨! 歡迎加入新車選購生活通，在這裡可以獲得新車資訊，或是透過功能選單選擇功能(開發練習)"
+},
+{
+  "type": "template",
+  "altText": "this is a buttons template",
+  "template": {
+    "type": "buttons",
+    "thumbnailImageUrl": "https://i.imgur.com/rZuTHd8.png",
+    "imageAspectRatio": "rectangle",
+    "imageSize": "contain",
+    "imageBackgroundColor": "#FFFFFF",
+    "title": "選出購車預算提供好車給您!",
+    "text": "點選您的購車預算",
+    "actions": [
+      {
+        "type": "postback",
+        "label": "60萬以下",
+        "text": "[60萬以下]",
+        "data": "[budget]0,60"
+      },
+      {
+        "type": "postback",
+        "label": "60-80萬",
+        "text": "[60-80萬]",
+        "data": "[budget]60,80"
+      },
+      {
+        "type": "postback",
+        "label": "80-120萬",
+        "text": "[80-120萬]",
+        "data": "[budget]80,120"
+      },
+      {
+        "type": "postback",
+        "label": "120-180萬",
+        "text": "[120-180萬]",
+        "data": "[budget]120,180"
+      }
+    ]
+  }
+}
+]
