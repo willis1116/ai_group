@@ -1,4 +1,5 @@
-# source from https://github.com/BingHongLi/ncu_gcp_ai_project
+# source from
+https://github.com/BingHongLi/ncu_gcp_ai_project
 # 課程專題開發使用
 
 # 環境準備
