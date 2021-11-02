@@ -47,7 +47,6 @@ class LineBotController:
         ImageService.line_user_upload_image(event)
         return "OK"
 
-    # 用戶收到照片時的處理辦法
     @classmethod
     def handle_video_message(cls, event):
         VideoService.line_user_upload_video(event)

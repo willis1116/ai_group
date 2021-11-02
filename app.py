@@ -1,44 +1,39 @@
-import sys, os
+import os
+import sys
 import urllib.request
+
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
 sys.path.append(rootPath)
 
-from flask import Flask, request, abort
+from flask import Flask, abort, request
 from flask_cors import CORS
-
-
-from linebot.exceptions import (
-    InvalidSignatureError
-)
+from linebot.exceptions import InvalidSignatureError
 
 from controllers.line_bot_controller import LineBotController
-
 from controllers.user_controller import UserController
 
 app = Flask(__name__)
 CORS(app)
 
-from linebot import (
-    LineBotApi, WebhookHandler
-)
 import os
+
+from linebot import LineBotApi, WebhookHandler
+
 line_bot_api=LineBotApi(channel_access_token=os.environ["LINE_CHANNEL_ACCESS_TOKEN"])
 handler=WebhookHandler(channel_secret=os.environ["LINE_CHANNEL_SECRET"])
-
-
-# 載入Follow事件
-from linebot.models.events import (
-    FollowEvent,UnfollowEvent,MessageEvent,TextMessage,PostbackEvent,ImageMessage,AudioMessage,VideoMessage
-)
 
 
 # 建立日誌紀錄設定檔
 # https://googleapis.dev/python/logging/latest/stdlib-usage.html
 import logging
+
 import google.cloud.logging
 from google.cloud.logging.handlers import CloudLoggingHandler
-
+# 載入Follow事件
+from linebot.models.events import (AudioMessage, FollowEvent, ImageMessage,
+                                   MessageEvent, PostbackEvent, TextMessage,
+                                   UnfollowEvent, VideoMessage)
 
 client = google.cloud.logging.Client()
 
