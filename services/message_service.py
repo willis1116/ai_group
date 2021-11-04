@@ -31,13 +31,17 @@ class MessageService:
     將照片存入CloudStorage內
     '''
     @classmethod
-    def line_user_upload_video(cls,event):
+    def line_user_message(cls,event):
 
         ## CameraAction
-        cameraQuickReplyButton = QuickReplyButton(action=CameraAction(label="拍照"))
+        cameraQuickReplyButton = QuickReplyButton(
+            action=CameraAction(label="拍照")
+        )
 
         ## 點擊後，切換至照片相簿選擇
-        cameraRollQRB = QuickReplyButton(action=CameraRollAction(label="選擇照片"))
+        cameraRollQRB = QuickReplyButton(
+            action=CameraRollAction(label="選擇照片")
+        )
 
         ## 設計QuickReplyButton的List
         quickReplyList = QuickReply(
@@ -45,14 +49,21 @@ class MessageService:
         )
         quick_reply_pic = TextSendMessage(text='請選擇照片上傳方式', quick_reply=quickReplyList)
         
-        template_message_dict = {
-          "＠發現走失犬":quick_reply_pic,
-        }
+        #template_message_dict = {
+        #  "@reply":quick_reply_pic,
+        #}
 
         # 回覆消息
-        if(event.message.text.find('@')!= -1):
+        if event.message.text == "@發現走失犬":
             cls.line_bot_api.reply_message(
                 event.reply_token,
-                template_message_dict.get(event.message.text)
+                #template_message_dict.get(event.message.text)
+                TextSendMessage(text='請選擇照片上傳方式', quick_reply=quickReplyList)
+            )
+        else:
+            text = "請點選選單"
+            cls.line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text=text)
             )
     

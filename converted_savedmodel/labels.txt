@@ -1,3 +1,9 @@
-0 李秉鴻
-1 大話AWS
-2 其他
+0 Bouledogue
+1 Chihuahua
+2 Dachshund
+3 Husky
+4 Maltese
+5 Pembroke_welsh_corgi
+6 Pomeranian
+7 Poodle
+8 shiba

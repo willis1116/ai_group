@@ -101,14 +101,15 @@ class ImageService:
         # 取得預測值
         max_probability_item_index = np.argmax(prediction[0])
 
+ 
         
         # 將預測值拿去尋找line_message
         # 並依照該line_message，進行消息回覆
         if prediction.max() > 0.6:
-            result_message_array = detect_json_array_to_new_message_array("line_message_json/"+class_dict.get(max_probability_item_index)+".json")
+            result_message = "這是" + class_dict.get(max_probability_item_index)
             cls.line_bot_api.reply_message(
                 event.reply_token,
-                result_message_array
+                result_message
             )
         else:
             cls.line_bot_api.reply_message(

@@ -18,6 +18,7 @@ from services.image_service import ImageService
 from services.user_service import UserService
 from services.video_service import VideoService
 from services.audio_service import AudioService
+from services.message_service import MessageService
 
 from urllib.parse import parse_qs
 
@@ -38,8 +39,8 @@ class LineBotController:
     # 現在暫時無
     @classmethod
     def handle_text_message(cls, event):
-
-        return None
+        MessageService.line_user_message(event)
+        return "OK"
 
     # 用戶收到照片時的處理辦法
     @classmethod
