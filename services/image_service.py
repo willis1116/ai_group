@@ -25,6 +25,7 @@ from google.cloud import storage
 
 # 圖像辨識
 import tensorflow.keras
+import cv2
 from PIL import Image, ImageOps
 import numpy as np
 import time
@@ -33,7 +34,7 @@ import os
 
 from utils.reply_send_message import detect_json_array_to_new_message_array
 
-model = tensorflow.keras.models.load_model('converted_savedmodel/model.savedmodel')
+#model = tensorflow.keras.models.load_model('converted_savedmodel/model.savedmodel')
 
 class ImageService:
     line_bot_api = LineBotApi(channel_access_token=os.environ["LINE_CHANNEL_ACCESS_TOKEN"])
@@ -63,66 +64,47 @@ class ImageService:
         blob = bucket.blob(destination_blob_name)
         blob.upload_from_filename(temp_file_path)
 
-
-
         # 載入模型Label
         '''
         載入類別列表
         '''
-        class_dict = {}
-        with open('converted_savedmodel/labels.txt') as f:
-            for line in f:
-                (key, val) = line.split()
-                class_dict[int(key)] = val
+        class_names = []
+        with open('converted_savedmodel/dogbreeds.names', "r") as f:
+            class_names = [cname.strip() for cname in f.readlines()]
 
-        # 載入模型
-        # Disable scientific notation for clarity
-        np.set_printoptions(suppress=True)
+        #填入檔案名稱
+        img = cv2.imread(temp_file_path)
 
-        # Load the model
-        # model = tensorflow.keras.models.load_model('converted_savedmodel/model.savedmodel')
+        #載入模型
+        net = cv2.dnn.readNet("converted_savedmodel/model.savedmodel/yolov4-tiny_best.weights", "converted_savedmodel/model.savedmodel/yolov4-tiny.cfg")
         
-        # 圖片預測
-        data = np.ndarray(shape=(1, 416, 416, 3), dtype=np.float32)
-        image = Image.open(temp_file_path)
-        size = (416, 416)
-        image = ImageOps.fit(image, size, Image.ANTIALIAS)
-        image_array = np.asarray(image)
-        # Normalize the image
-        #normalized_image_array = (image_array.astype(np.float32) / 127.0 - 1 )
-        normalized_image_array = (image_array/255.).astype(np.float32)
-        # Load the image into the array
-        data = np.ndarray(shape=(1, 416, 416, 3), dtype=np.float32)
-        data[0]= normalized_image_array[0:416,0:416,0:3]
-
-        # run the inference
-        prediction = model.predict(data)
-   
-        # 取得預測值
-        max_probability_item_index = np.argmax(prediction[0])
+        model = cv2.dnn_DetectionModel(net)
+        model.setInputParams(size=(416, 416), scale=1/255)
+           
+        
+        classes, scores, boxes = model.detect(img, 0.1, 0.2)
+        max_score = scores.max()
+        max_num = np.argmax(scores)
+        n = "\n"
+        result_message = '圖片大小: '+ str(img.shape) + n
+        text = ""
+        
+        for (classid, score, box) in zip(classes, scores, boxes):
+            label = f"{class_names[int(classid)]}"
+            text = text + f'偵測結果:{label} 分數:{score} 位置"{box}{n}'
 
  
-        
-        # 將預測值拿去尋找line_message
-        # 並依照該line_message，進行消息回覆
-        if prediction.max() > 0.6:
-            result_message = "這是" + str(max_probability_item_index)
-            #class_dict.get(max_probability_item_index)
+        if len(classes) !=  0:
+            send_message = result_message + text
             cls.line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(result_message)
+                TextSendMessage(send_message)
             )
         else:
             cls.line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(f"""圖片無法辨認，圖片已上傳，請期待未來的AI服務！""")
+                TextSendMessage(f"""圖片無法辨識出狗，圖片已存入圖庫，後續提供資訊給您""")
             )
             
         # 移除本地檔案
         os.remove(temp_file_path)
-
-        # 回覆消息
-        # cls.line_bot_api.reply_message(
-        #     event.reply_token,
-        #     TextSendMessage(f"""圖片已上傳，請期待未來的AI服務！""")
-        # )

@@ -1,6 +1,6 @@
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
-FROM python:3.7-slim
+FROM python:3.8-slim
 
 # Allow statements and log messages to immediately appear in the Knative logs
 ENV PYTHONUNBUFFERED True
@@ -10,6 +10,8 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
+RUN apt update
+RUN apt-get install -y libglib2.0-0 libsm6 libxrender1 libxext6 ffmpeg libgl1-mesa-glx
 # Install production dependencies.
 RUN pip install -r requirements.txt
 
