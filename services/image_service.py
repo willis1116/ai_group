@@ -11,7 +11,6 @@ from flask import Request
 from linebot import (
     LineBotApi
 )
-
 import os
 from daos.user_dao import UserDAO
 from linebot.models import (
@@ -69,42 +68,57 @@ class ImageService:
         載入類別列表
         '''
         class_names = []
+        ch_class_names = []        
         with open('converted_savedmodel/dogbreeds.names', "r") as f:
             class_names = [cname.strip() for cname in f.readlines()]
+        with open('converted_savedmodel/clabels.txt', "r") as f:
+            ch_class_names = [cname.strip() for cname in f.readlines()]
 
         #填入檔案名稱
         img = cv2.imread(temp_file_path)
 
         #載入模型
+        yolo_net = cv2.dnn.readNet("converted_savedmodel/model.savedmodel/yolov4.weights", "converted_savedmodel/model.savedmodel/yolov4.cfg")
         net = cv2.dnn.readNet("converted_savedmodel/model.savedmodel/yolov4-tiny_best.weights", "converted_savedmodel/model.savedmodel/yolov4-tiny.cfg")
         
-        model = cv2.dnn_DetectionModel(net)
-        model.setInputParams(size=(416, 416), scale=1/255)
-           
-        
-        classes, scores, boxes = model.detect(img, 0.1, 0.2)
-        max_score = scores.max()
-        max_num = np.argmax(scores)
-        n = "\n"
-        result_message = '圖片大小: '+ str(img.shape) + n
-        text = ""
-        
-        for (classid, score, box) in zip(classes, scores, boxes):
-            label = f"{class_names[int(classid)]}"
-            text = text + f'偵測結果:{label} 分數:{score} 位置"{box}{n}'
+        #辨別是否為狗
+        isdog = False 
+        yolo_model =  cv2.dnn_DetectionModel(yolo_net)
+        yolo_model.setInputParams(size=(416, 416), scale=1/255)
+        yclasses, yscores, yboxes = yolo_model.detect(img, 0.1, 0.2)
+        for classid in yclasses :
+            if classid == 16 :
+                isdog = True
 
- 
-        if len(classes) !=  0:
-            send_message = result_message + text
+
+        if isdog :
+            #狗品種辨識
+            model = cv2.dnn_DetectionModel(net)
+            model.setInputParams(size=(416, 416), scale=1/255)
+            classes, scores, boxes = model.detect(img, 0.1, 0.2)
+            #max_score = scores.max()
+            #max_num = np.argmax(scores)
+            n = "\n"
+            #result_message = '圖片大小: '+ str(img.shape) + n
+            text = ""
+            
+            for (classid, score) in zip(classes, scores):
+                if score > 0.5:
+                    label = f"{ch_class_names[int(classid)]}"
+                    #text = text + f'偵測結果:{label} 分數:{score} 位置{box}{n}'
+                    text = text + f'偵測品種:{label} {n}'
+                else:
+                    text = "看起來是狗，但好像沒收在品種資料庫，期待最新的服務"
+            
             cls.line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(send_message)
+                TextSendMessage(text)
             )
         else:
             cls.line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(f"""圖片無法辨識出狗，圖片已存入圖庫，後續提供資訊給您""")
+                TextSendMessage(f"""「好像不是狗，有點難判斷，再傳一張試試？」""")
             )
-            
+
         # 移除本地檔案
         os.remove(temp_file_path)
