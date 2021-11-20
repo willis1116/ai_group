@@ -107,8 +107,9 @@ class ImageService:
                     label = f"{ch_class_names[int(classid)]}"
                     #text = text + f'偵測結果:{label} 分數:{score} 位置{box}{n}'
                     text = text + f'偵測品種:{label} {n}'
-                else:
-                    text = "看起來是狗，但好像沒收在品種資料庫，期待最新的服務"
+            
+            if len(text) == 0 :
+                text = "看起來是狗，但好像沒收在品種資料庫，期待最新的服務"
             
             cls.line_bot_api.reply_message(
                 event.reply_token,

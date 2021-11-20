@@ -13,3 +13,7 @@ tensorflow-cpu == 2.4.1
 opencv-python==4.5.3.56
 Pillow
 pygsheets
+gspread
+google-auth
+oauth2client
+tabulate
